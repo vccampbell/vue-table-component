@@ -68,6 +68,17 @@ Table headers supports slots, so you can pass in custom content for each column 
 ```
 The screenshot below shows a use-case for custom column headers by allowing a 'select all' feature.
 ![selectall menu example](https://github.com/vccampbell/vue-table-component/blob/master/docs/screenshot2.png)
+```html
+<template v-slot:ID="{ column }">
+  <table>
+    <tr>
+      <td><input type="radio" value="Approve" v-model="selectedAction" @click="selectAllApprove" /> Approve</td>
+      <td><input type="radio" value="Reject" v-model="selectedAction" @click="selectAllReject" /> Reject</td>
+      <td><input type="radio" value="No Action" v-model="selectedAction" @click="selectAllNoAction" /> No Action</td>
+    </tr>
+  </table>
+</template>
+```
 #### Props
 - `headers`: (required) array with table columns definition (See columns definition)
 - `rows`: (required) array with data to fill the table

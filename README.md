@@ -2,6 +2,11 @@
 A Vue component to display tabular data. Supports sorting, paging and filtering. Base structure from:
 [github](https://github.com/ozoono/vue-table-component)
 
+- Uses FontAwesome icons
+- requires node-sass
+- Installs as a standalone component, just import it. Components are globally-registered
+`import 'vue-table-filter-component'`
+
 ## Demo
 [https://vccampbell.github.io/](https://vccampbell.github.io/)
 

@@ -6,7 +6,7 @@ A Vue component to display tabular data. Supports sorting, paging and filtering.
 - requires node-sass
 - Installs as a standalone component, just import it. Components are globally-registered
 `import 'vue-table-filter-component'`
-![Filter menu example](https://raw.githubusercontent.com/vccampbell/vue-table-component/master/docs/screenshot.png)
+![Filter menu example](https://raw.githubusercontent.com/vccampbell/vue-table-component/master/docs/screenshot1.png)
 ## Demo
 [https://vccampbell.github.io/](https://vccampbell.github.io/)
 

@@ -1,4 +1,4 @@
-# vue-table-component
+# vue-filter-table-component
 A Vue component to display tabular data. Supports sorting, paging and filtering. Base structure from:
 [github](https://github.com/ozoono/vue-table-component)
 

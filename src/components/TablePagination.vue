@@ -7,8 +7,7 @@
           v-for="index in totalPages" 
           :value="index" 
           :key="index"
-          :selected="index == page"
-        >
+          :selected="index == page">
           {{ index }}
         </option>
       </select>
@@ -44,7 +43,7 @@ export default {
       return this.page + 1;
     },
     alignClass(){
-      return `ozn-${this.paginationOptions.align}`
+      return `vcc-${this.paginationOptions.align}`
     }   
   },
   methods:{

@@ -6,7 +6,7 @@
       :rows="items"      
       :sort="sort2"
       :pagination="pagination"
-      css-style="custom-style"      
+      css-style="default-style"      
     >
       <template v-slot:items="{ row }">
         <td><i @click="select(row)" class="fa fa-ellipsis-h" aria-hidden="true"></i> {{ row.first_name }}</td>
@@ -16,21 +16,16 @@
         <td>{{ row.country }}</td>                 
         <td>{{ row.category }}</td>
         <td>{{ row.last_update }}</td>        
-      </template>
-      
+      </template>      
       <template v-slot:no-data>
-        <span>No data</span>
+        <span>Empty.</span>
       </template>
     </TableView>
-
-    <div class="separator">---&#10043;---</div>
-    <Footer></Footer>
   </div>
 </template>
 <script>
 import { columns, rows } from './data'
 import TableView from '@/components/TableView'
-import Footer from '@/components/Footer'
 
 export default {
   name: 'App',
@@ -59,7 +54,6 @@ export default {
   },
   methods: {
     select(row) {
-      console.log('row', row);
     }
   }
 }

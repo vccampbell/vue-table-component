@@ -1,47 +1,61 @@
 <template>
-  <div class="vcc-component"> 
-    <table class="table table-sm">
+  <div> 
+    <table :class="cssStyle">
       <thead>
         <tr>
-          <th v-for="(col, idx) in headers" :key="idx">     
-            <template>
-              <div style="width:100%;position:relative;left:0;top:0;margin:0;border:0;cursor:pointer">
-                <table style="width:100%;">
-                  <tbody>
-                    <tr>
-                      <td>
-                        <a v-on:click="OnClickFilter(col)">{{col.title}} 
-                          <i v-if="sortField === col.field && sortOrder === 'asc'" class="fa fa-long-arrow-up" aria-hidden="true"></i>
-                          <i v-if="sortField === col.field && sortOrder === 'desc'" class="fa fa-long-arrow-down" aria-hidden="true"></i>
-                          <i v-if="col.filteredValue != null" class="fa fa-filter" aria-hidden="true"></i>
-                          <i class="fa fa-chevron-down pull-right"></i>
-                        </a>
-                      </td>
+          <th v-for="(col, idx) in headers" :key="idx" :data-col-header="col.field">
+              <slot :name="col.field" :column="col">
+                <div :data-menu-div="col.field" style="width:100%;position:relative;left:0;top:0;margin:0;border:0;cursor:pointer">
+                  <table :data-menu-table="col.field" style="width:100%;">
+                    <tbody>
+                      <tr>
+                        <td>
+                          <a @click="PopMenuFromChevron(col)">{{col.title}} 
+                            <i v-if="sortField === col.field && sortOrder === 'asc'" class="fa fa-long-arrow-up" aria-hidden="true"></i>
+                            <i v-if="sortField === col.field && sortOrder === 'desc'" class="fa fa-long-arrow-down" aria-hidden="true"></i>
+                            <i v-if="filters.filter(item => item.field === col.field ).length > 0" class="fa fa-filter" aria-hidden="true"></i>
+                            <i class="fa fa-chevron-down pull-right"></i>
+                          </a>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div v-if="col.field === activeColumn" :id="'menu-'+idx" style="top:28px; position:absolute;left:0;width:220px;color:#000;background-color: #fff;box-shadow:3px 3px 6px -4px rgba(0,0,0,0.3),-3px 3px 6px -4px rgba(0,0,0,0.3);border-top:0px solid transparent;max-height:320px;overflow-y:scroll;overflow-x:hidden;">
+                  <table style="width:100%">
+                    <tr v-if="filters.filter(item => item.field === col.field ).length > 0">
+                      <td @click="clearFilter(col)"><i class="fa fa-trash-o"></i></td>
+                      <td @click="clearFilter(col)"> Clear filter</td>
                     </tr>
-                  </tbody>
-                </table>
-                <div v-if="col.active" id="menu" class="ms-core-menu-box" style="top:28px; position:absolute;left:0; width:220px">
-                <table class="table table-sm" style="width:100%">
-                  <tr v-if="col.filteredValue != null">
-                    <td @click="clearFilter(col)"><i class="fa fa-trash-o"></i></td>
-                    <td @click="clearFilter(col)"> Clear filter</td>
-                  </tr>
-                  <tr>
-                    <td @click="sortBy(idx, 'asc')"><i class="fa fa-sort-alpha-asc"></i></td>
-                    <td @click="sortBy(idx, 'asc')">Ascending</td>
-                  </tr>
-                  <tr>
-                    <td @click="sortBy(idx, 'desc')"><i class="fa fa-sort-alpha-desc"></i></td>
-                    <td @click="sortBy(idx, 'desc')">Descending</td>
-                  </tr>
-                  <tr v-for="(option, idx) in col.options" :key="idx">
-                    <td>&nbsp;</td>
-                    <td @click="filter(col, option)" class="filter-option">{{option}}</td>
-                  </tr>
-                </table>
+                    <template v-if="col.sortable">
+                      <tr>
+                        <td @click="sortBy(idx, 'asc')"><i class="fa fa-sort-alpha-asc"></i></td>
+                        <td @click="sortBy(idx, 'asc')">Ascending</td>
+                      </tr>
+                      <tr>
+                        <td @click="sortBy(idx, 'desc')"><i class="fa fa-sort-alpha-desc"></i></td>
+                        <td @click="sortBy(idx, 'desc')">Descending</td>
+                      </tr>
+                    </template> 
+                    <template v-else>
+                      <tr>
+                        <td colspan="2">Sort disabled.</td>
+                      </tr>
+                    </template>                 
+                    <template v-if="col.filterable">
+                      <tr v-for="(option, idx) in filterOptions" :key="idx" onmouseover="this.style.backgroundColor='#ececec'" onmouseout="this.style.backgroundColor='#ffffff'">
+                        <td>&nbsp;</td>
+                        <td @click="filterBy(col, option)">{{option}}</td>
+                      </tr>
+                    </template>
+                    <template v-else>
+                      <tr>
+                        <td colspan="2">Filter disabled.</td>
+                      </tr>
+                    </template>
+                  </table>
+                  </div>
                 </div>
-              </div>
-            </template>             
+              </slot>  
           </th>
         </tr>   
       </thead>
@@ -108,7 +122,7 @@ export default {
     },
     cssStyle: {
       type: String,
-      default: 'vcc'
+      default: 'default-style'
     }
   },
   data(){
@@ -119,7 +133,7 @@ export default {
       },
       paginationDefault: {
         enabled: true,
-        itemsPerPage: 5,
+        itemsPerPage: 25,
         align: 'right',
         visualStyle: 'buttons'
       },
@@ -129,9 +143,10 @@ export default {
       visibleRows: {},
       tableRows: {},      
       page: 1,
+      activeColumn: null,
       filteredRows: {},
-      show: false,
-      activeFilters: []
+      filters: [],
+      filterOptions: []
     }
   },
   computed: {
@@ -160,8 +175,8 @@ export default {
   created() {
     document.addEventListener('click', this.documentClick);
   },
-  mounted(){
-    this.tableRows = this.rows.slice(0);   // Para que haga una copia del array  
+  mounted() {
+    this.tableRows = this.rows.slice(0);
     this.visibleRows = this.tableRows;
     this.filteredRows = this.tableRows;
     if (this.sortEnabled) this.initSort() 
@@ -170,7 +185,7 @@ export default {
   methods:{
     documentClick() {
       if(!this.$el.contains(event.target))
-        this.closeAllMenus();
+        this.activeColumn = null;
     },
     onNewPage: function(newPage){
       this.page = newPage
@@ -189,7 +204,7 @@ export default {
 
       let defaultSortColumn = null
 
-      for(let x=0; x<this.headers.length; x++){      
+      for(let x = 0; x < this.headers.length; x++){      
         if ((this.headers[x].sortable) && (this.headers[x].field == this.sortOptions.field)) {
           defaultSortColumn = x            
           break;
@@ -203,7 +218,7 @@ export default {
         if(this.sortColumn === idx)
         {
           if(order !== this.sortOrder) {
-            this.visibleRows.reverse();
+            this.filteredRows.reverse();
             this.sortOrder = order;
           }            
         }
@@ -219,91 +234,73 @@ export default {
           else {
             this.filteredRows.sort((a, b) => a[this.sortField].localeCompare(b[this.sortField]))
           }     
+          // always ordered asc in the beginning.
+          // reverse if desc
           if(order === 'desc')
             this.filteredRows.reverse();
         }
-        this.page = 1
+        this.page = 1 // reset view to page 1
 
         this.selectVisibleRows()
-        this.closeAllMenus();    
+        this.activeColumn = null;
       }      
     },
-    filter: function(column, option) {
-      var self = this;
-      column.active = false; // hide the filter menu
-      column.filteredValue = option; // set the value of the filter
-      var s = new Set(this.activeFilters); // create a Set object to hold a list of active filters
-      this.activeFilters = s.add(column.field); // add the column to the list of active filters
-      this.applyFilter();    	
+    filterBy: function(column, option) {
+      this.activeColumn = null;
+      this.filters.push({ "field": column.field, "value": option })
+      this.applyFilter()  	
     },
     clearFilter: function(column) {    	
     	var self = this		
-      column.active = false
-      column.filteredValue = null
-      if(self.activeFilters && self.activeFilters.size > 0)
-        self.activeFilters.delete(column.field)
+      this.activeColumn = null;
+      for(let i = 0; i < self.filters.length; i++)
+      {
+        if(column.field === self.filters[i].field)
+          self.filters.splice(i,1)
+      }
       self.applyFilter()
     },
     applyFilter: function() {
-    	var self = this;
+    	var self = this
     	this.visibleRows = this.tableRows.filter(function(item) {
-        for (var activeFilter of self.activeFilters) {
-          var column = self.getColumn(activeFilter); // should only ever be one
-          if (item[activeFilter] === undefined || item[activeFilter] != column[0].filteredValue)
-            return false;
+        for(let filter of self.filters)
+        {
+          if(item[filter.field] === undefined || item[filter.field] != filter.value)
+            return false
         }
-        return true;  
+        return true
       })
       this.filteredRows = this.visibleRows
       this.page = 1
       this.selectVisibleRows()
     },
-    getColumn: function(activeFilter) {
-    	return this.headers.filter(function(column) { return column.field === activeFilter; });
-    },
-  	OnClickFilter: function(c) {      
-    	c.active = !c.active;
-      var options = this.tableRows.map(function(item) { return item[c.field]; });
+  	PopMenuFromChevron: function(c) {      
+      if(c.field === this.activeColumn)
+        this.activeColumn = null;
+      else
+        this.activeColumn = c.field;
+      if(!c.filterable)
+        return
+      var options = this.tableRows.map(function(item) { return item[c.field]; })
       const distinct = (value, index, self) => {
-        return self.indexOf(value) === index;
+        return self.indexOf(value) === index
       }
       var distinctOptions = options.filter(distinct);
-      if (c.type == 'Number') {
-            c.options = distinctOptions.sort((a, b) => a - b)            
-          }
-          else {
-            c.options = distinctOptions.sort((a, b) => a.localeCompare(b))
-          }
-      for(let header of this.headers)
+      if (c.type == 'Number') 
       {
-        if(c.title != header.title)
-          header.active = false;
+            this.filterOptions = distinctOptions.sort((a, b) => a - b)
       }
-    },
-    closeAllMenus: function() {
-      for(let header of this.headers)
+      else 
       {
-        header.hover = false;
-        header.active = false;
-      }     
+        this.filterOptions = distinctOptions.sort((a, b) => a.localeCompare(b))
+      }      
     }
   }
 }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-@import url(https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css);
-@import url(https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css);
-.material-icons {
-  font-size: 1rem; 
-  display: inline-block;
-  vertical-align: middle;
-  cursor: pointer;
-}
-// Default table styles
-.vcc{
-  .vcc-table {
+.default-style{
+  .default-table {
     border-collapse: collapse;
     width: 100%;
     thead {
@@ -339,13 +336,6 @@ export default {
             }
           }
         }
-        div {
-          div.ms-core-menu-box {
-            background-color: #fff;
-            box-shadow:3px 3px 6px -4px rgba(0,0,0,0.3),-3px 3px 6px -4px rgba(0,0,0,0.3);
-            border-top:0px solid transparent;
-          }
-        }
       }      
     }
     tbody {
@@ -361,28 +351,6 @@ export default {
         font-size: 1em; 
       }      
     }
-    .ms-core-menu-box {
-      background-color: #fff;
-      box-shadow:3px 3px 6px -4px rgba(0,0,0,0.3),-3px 3px 6px -4px rgba(0,0,0,0.3);
-      border-top:0px solid transparent;
-    }
   }
 } 
-.hover {
-  cursor:pointer;
-  background-color: #ccc;
-}
-.fitler-option:hover {
-    background-color: #ececec;
-  }
-.items td {padding: 2px;}
-  .ms-core-menu-box
-  {
-    color:#000;
-    background-color: #fff;
-    box-shadow:3px 3px 6px -4px rgba(0,0,0,0.3),-3px 3px 6px -4px rgba(0,0,0,0.3);
-    border-top:0px solid transparent;
-    max-height: 320px;
-    overflow-y: scroll;
-  }
 </style>

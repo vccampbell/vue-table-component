@@ -1,10 +1,11 @@
 {
-  "name": "vue-table-component",
-  "version": "0.1.0",
-  "private": true,
-  "homepage": "https://github.com/ozoono/vue-table-component.git",
+  "name": "vue-filter-table-component",
+  "version": "0.1.21",
+  "private": false,
+  "homepage": "https://github.com/vccampbell/vue-table-component.git",
   "scripts": {
     "serve": "vue-cli-service serve",
+    "build-bundle": "vue-cli-service build --target lib --name vue-table-lib ./src/index.js",
     "build": "vue-cli-service build",
     "deploy": "gh-pages -d dist",
     "lint": "vue-cli-service lint"
@@ -49,5 +50,35 @@
   "browserslist": [
     "> 1%",
     "last 2 versions"
-  ]
+  ],
+  "description": "A Vue component to display tabular data. Supports sorting, paging and filtering. Base structure from: [github](https://github.com/ozoono/vue-table-component)",
+  "main_old": "babel.config.js",
+  "files": [
+    "dist/*",
+    "src/*",
+    "public/*",
+    "*.json",
+    "*.js"
+  ],
+  "main": "./dist/vue-table-lib.common.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vccampbell/vue-table-component.git"
+  },
+  "keywords": [
+    "vue",
+    "component",
+    "table",
+    "sorting",
+    "filtering",
+    "paging"
+  ],
+  "author": "Craig Campbell",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vccampbell/vue-table-component/issues"
+  }
 }

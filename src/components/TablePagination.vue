@@ -12,7 +12,7 @@
         </option>
       </select>
       <span> of {{ totalPages }}</span>       
-      <span> || {{ totalRows }}</span>     
+      <span> || {{ totalRows }} items.</span>     
     </template>
     <template v-else>
         <i v-if="prevPage > 0" class="fa fa-caret-square-o-left fa-2x" aria-hidden="true" @click="goToPage(prevPage)" style="cursor:pointer"></i>

@@ -6,7 +6,7 @@
       :rows="items"      
       :sort="sort2"
       :pagination="pagination"
-      css-style="default-style"      
+      css-style="table table-sm"      
     >
       <template v-slot:items="{ row }">
         <td><i @click="select(row)" class="fa fa-ellipsis-h" aria-hidden="true"></i> {{ row.first_name }}</td>
@@ -30,8 +30,7 @@ import TableView from '@/components/TableView'
 export default {
   name: 'App',
   components:{
-    TableView,
-    Footer
+    TableView
   },
   data(){
     return{
@@ -59,13 +58,15 @@ export default {
 }
 </script>
 <style lang="scss">
+@import url(https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css);
+@import url(https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css);
 @import url(http://fonts.googleapis.com/css?family=Roboto+Mono);
 body, html{
   height: 100%;
 }
 #app {
   font-family: 'Roboto Mono', Helvetica, Arial, sans-serif;
-  font-size: 12px;
+  font-size: 11px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;

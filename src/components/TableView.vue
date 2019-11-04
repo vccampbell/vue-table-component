@@ -52,7 +52,7 @@
                       </td>
                       <td @click="clearFilter(col)">Clear filter</td>
                     </tr>
-                    <template v-if="col.sortable">
+                    <template v-if="col.sortable && filters.filter(item => item.field === col.field ).length === 0">
                       <tr
                         onmouseover="this.style.backgroundColor='#ececec'"
                         onmouseout="this.style.backgroundColor='#ffffff'"
@@ -303,6 +303,11 @@ export default {
     },
     filterBy: function(column, option) {
       this.activeColumn = null;
+      // if the column exists in filters already, remove it 
+      // set the new filter based on new value      
+      for (let i = 0; i < this.filters.length; i++) {
+        if (column.field === this.filters[i].field) this.filters.splice(i, 1);
+      }
       this.filters.push({ field: column.field, value: option });
       this.applyFilter();
     },

@@ -1,11 +1,11 @@
 export const columns = [
-    {"title":"First Name","field":"first_name","active":false,"options":[],"filteredValue":null,"type":"String","sortable":true},
-    {"title":"Last Name","field":"last_name","active":false,"options":[],"filteredValue":null,"type":"String","sortable":true},
-    {"title":"Email","field":"email","active":false,"options":[],"filteredValue":null,"type":"String","sortable":true},
-    {"title":"Age","field":"age","active":false,"options":[],"filteredValue":null,"type":"Number","sortable":true},
-    {"title":"Country","field":"country","active":false,"options":[],"filteredValue":null,"type":"String","sortable":true},
-    {"title":"Category","field":"category","active":false,"options":[],"filteredValue":null,"type":"String","sortable":true},
-    {"title":"Last Update","field":"last_update","active":false,"options":[],"type":"String","sortable":true},
+    {"title":"First Name","field":"first_name","active":false,"type":"String","sortable":true,"filterable":true},
+    {"title":"Last Name","field":"last_name","active":false,"type":"String","sortable":true,"filterable":true},
+    {"title":"Email","field":"email","active":false,"type":"String","sortable":true,"filterable":true},
+    {"title":"Age","field":"age","active":false,"type":"Number","sortable":true,"filterable":true},
+    {"title":"Country","field":"country","active":false,"type":"String","sortable":true,"filterable":true},
+    {"title":"Category","field":"category","active":false,"type":"String","sortable":true,"filterable":true},
+    {"title":"Last Update","field":"last_update","active":false,"type":"String","sortable":true,"filterable":true}
 ]
 
 export const rows = [{"first_name":"Isidor","last_name":"Gatenby","email":"igatenby0@stanford.edu","age":20,"country":"El Salvador","category":"A2","last_update":"2017-12-14"},

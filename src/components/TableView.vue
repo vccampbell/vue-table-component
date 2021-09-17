@@ -115,14 +115,13 @@
         </template>
       </tbody>
     </table>
-    <TablePagination
+    <table-pagination
       v-if="paginationEnabled"
       :page="page"
       :total-pages="totalPages"
       :total-rows="visibleRows.length"
       :pagination-options="paginationOptions"
-      @new-page="onNewPage"
-    />
+      @new-page="onNewPage"></table-pagination>
   </div>
 </template>
 

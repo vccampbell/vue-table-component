@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <h2>Custom styles example:</h2>
-    <TableView
+    <table-view
       :headers="columns"
       :rows="items"      
       :sort="sort2"
@@ -20,7 +20,7 @@
       <template v-slot:no-data>
         <span>Empty.</span>
       </template>
-    </TableView>
+    </table-view>
   </div>
 </template>
 <script>

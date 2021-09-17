@@ -8,11 +8,11 @@ library.add([faTrash, faSortAlphaDown, faSortAlphaDownAlt, faLongArrowAltUp, faL
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.config.productionTip = false
 
-new Vue({
-  el: "#app",
-  components: { App },
-  template: "<App/>"
-});
 // new Vue({
-//   render: h => h(App)
-// }).$mount('#app')
+//   el: "#app",
+//   components: { App },
+//   template: "<App/>"
+// });
+new Vue({
+  render: h => h(App)
+}).$mount('#app')

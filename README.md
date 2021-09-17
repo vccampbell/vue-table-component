@@ -13,7 +13,7 @@ A Vue component to display tabular data. Supports sorting, paging and filtering.
 
 ## Basic Usage
 ```html
-  <TableView
+  <table-view
     :headers="[
       {"title":"First Name","field":"first_name","active":false,"type":"String","sortable":true,"filterable":true},
     {"title":"Last Name","field":"last_name","active":false,"type":"String","sortable":true,"filterable":true},
@@ -57,7 +57,7 @@ A Vue component to display tabular data. Supports sorting, paging and filtering.
     <template v-slot:no-data>
       <span>No data</span>
     </template>
-  </TableView>
+  </table-view>
 ```
 ## Advanded Usage
 Table headers supports slots, so you can pass in custom content for each column header in the dataset. Note this will override all of the sorting and filtering functionality. This can be used if you have a custom column header information. 
